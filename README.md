@@ -27,7 +27,7 @@ Dreamweave is an intuitive app designed to help users manage their tasks, share 
 
 **Component Hierarchy Diagram:**
 ----------------------------------------------------
-![Component](.png)
+![Component](5.png)
 
 **Wireframe :**
 ----------------------------------------------------
@@ -47,4 +47,4 @@ Dreams page :
 ----------------------------------------------------
 
 **Future enhancement :**
-----------------------------------------------------
+---------------------------------------------------

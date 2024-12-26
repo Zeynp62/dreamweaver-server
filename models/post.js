@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 
 const postSchema = new Schema(
   {
-    post_id: { type: Number, required: true },
     category_id: { type: mongoose.Schema.Types.Number, ref: 'Category', required: true },
     title: { type: String, required: true },
     description: { type: String },

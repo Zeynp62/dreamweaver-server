@@ -17,11 +17,23 @@ const createPost = async (req, res) => {
     user.save()
     res.status(201).send(post)
   } catch (error) {
-    res.status(400).send({ msg: 'Error creating a Post!', error: error })
+    res.status(400).send({ msg: 'Error creating a Post', error: error })
+  }
+}
+
+const updatePostByID = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
+      new: true
+    })
+    res.status(200).send(post)
+  } catch (error) {
+    res.status(400).send({ msg: 'Error updating post by ID', error })
   }
 }
 
 module.exports = {
   getAllPosts,
-  createPost
+  createPost,
+  updatePostByID
 }

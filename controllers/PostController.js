@@ -32,8 +32,22 @@ const updatePostByID = async (req, res) => {
   }
 }
 
+const deletePostByID = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id)
+    if (post) {
+      await User.findByIdAndUpdate(post.user, {
+        $pull: { posts: post._id }
+      })
+    }
+    res.status(200).send({ msg: 'Post is successfully deleted!', post })
+  } catch (error) {
+    res.status(400).send({ msg: 'Error deleting a post', error })
+  }
+}
 module.exports = {
   getAllPosts,
   createPost,
-  updatePostByID
+  updatePostByID,
+  deletePostByID
 }

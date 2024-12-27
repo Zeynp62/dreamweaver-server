@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
-const postSchema = new Schema(
+const postSchema = new mongoose.Schema(
   {
     category_id: { type: mongoose.Schema.Types.Number, ref: 'Category', required: true },
     title: { type: String, required: true },
     description: { type: String },
     postImg: { type: String },
-    user_id: { type: mongoose.Schema.Types.Number, ref: 'User', required: true }
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {
     timestamps: true

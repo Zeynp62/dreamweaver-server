@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
 
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true },
     email: { type: String, required: true },
-    passwordDigest: { type: string, required: true },
-    profileImg: { type: String }
+    passwordDigest: { type: String, required: true },
+    profileImg: { type: String },
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
   },
   { timestamps: true }
 )

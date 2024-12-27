@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const postSchema = new Schema(
+const postSchema = new mongoose.Schema(
   {
     category: {
       type: mongoose.Schema.Types.Number,
@@ -13,7 +13,7 @@ const postSchema = new Schema(
       required: true
     },
     postImg: { type: String },
-    user_id: { type: mongoose.Schema.Types.Number, ref: 'User', required: true }
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {
     timestamps: true

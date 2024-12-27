@@ -3,7 +3,7 @@ const logger = require('morgan')
 const cors = require('cors')
 
 //Routs
-
+const UserRouter = require('./routes/UserRouter')
 
 const PORT = process.env.PORT || 3001
 
@@ -17,6 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 //app.use for the Routes
+app.use('/user', UserRouter)
 
 
 app.use('/', (req,res)=>{

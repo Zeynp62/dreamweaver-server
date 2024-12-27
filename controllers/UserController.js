@@ -1,4 +1,4 @@
-//connect to the user model
+//connect to the models
 const User = require('./../models/user')
 const Task = require('./../models/tasks')
 const Post = require('./../models/post')

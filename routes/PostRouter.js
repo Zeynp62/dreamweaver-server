@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const PostController = require('../controllers/PostController')
-
 const multer = require('multer')
 
 const storage = multer.diskStorage({
@@ -15,5 +14,9 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage: storage })
+router.get('/', PostController.getAllPosts)
+router.post('/', upload.single('image'), PostController.createPost)
+router.put('/:id', PostController.updatePostByID)
+router.delete('/:id', PostController.deletePostByID)
 
 module.exports = router

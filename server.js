@@ -2,6 +2,7 @@ const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
 
+
 //Routs
 const UserRouter = require('./routes/UserRouter')
 const CategoryRouter = require('./routes/CategoryRouter')

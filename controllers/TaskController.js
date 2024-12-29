@@ -1,4 +1,8 @@
-const { Task , User } = require('../models')
+const  Task  = require('../models/tasks')
+const  User  = require('../models/user')
+const  Category  = require('../models/category')
+
+
 
 
 const createTask = async (req, res) => {
@@ -32,11 +36,22 @@ const getAllTasks = async (req, res) => {
     }
   }
 
+  const updateTaskByID = async (req, res) => {
+    try {
+      const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+        new: true
+      })
+      res.status(200).send(task)
+    } catch (error) {
+      res.status(400).send({ msg: 'Error updating task by ID!', error })
+    }
+  }
+
   const deleteTaskByID = async (req, res) => {
     try {
       const task = await Task.findByIdAndDelete(req.params.id)
-      await User.findByIdAndUpdate(recipe.user, { $pull: { recipes: recipe._id } })
-      res.status(200).send({ msg: 'Task successfully deleted!', recipe })
+      await User.findByIdAndUpdate(task.user, { $pull: { task: task._id } })
+      res.status(200).send({ msg: 'Task successfully deleted!', task })
     } catch (error) {
       res.status(400).send({ msg: 'Error deleting a Task by ID!', error })
     }
@@ -46,5 +61,6 @@ const getAllTasks = async (req, res) => {
     createTask,
     getTaskByID,
     getAllTasks,
+    updateTaskByID,
     deleteTaskByID
   }

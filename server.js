@@ -5,6 +5,7 @@ const cors = require('cors')
 //Routs
 const UserRouter = require('./routes/UserRouter')
 const CategoryRouter = require('./routes/CategoryRouter')
+const TaskRouter = require('./routes/TaskRouter')
 const PostRouter = require('./routes/PostRouter')
 
 const PORT = process.env.PORT || 3001
@@ -22,6 +23,8 @@ app.use(express.urlencoded({extended:false}))
 app.use('/user', UserRouter)
 app.use('/category',CategoryRouter)
 app.use('/posts',PostRouter)
+app.use('/task',TaskRouter)
+
 
 app.use('/', (req,res)=>{
   res.send('App is connected')

@@ -2,9 +2,11 @@ const Post = require('../models/post')
 const User = require('../models/user')
 const Category = require('../models/category')
 
-const getAllPosts = async (req, res) => {//getting the post with the category
+const getAllPosts = async (req, res) => {
+  //getting the post with the category
   try {
     const posts = await Post.find().populate('category')
+    // const posts = await Post.find({})
     res.status(200).send(posts)
   } catch (error) {
     res.status(400).send({ msg: 'Error getting all posts', error })
@@ -48,10 +50,12 @@ const deletePostByID = async (req, res) => {
   }
 }
 
-const getPostByID = async (req, res) => { //will get all the post information
+const getPostByID = async (req, res) => {
   try {
-  const post = await Post.findById(req.params.id).populate('category').populate('user')
-  res.status(200).send(post)
+    const post = await Post.findById(req.params.id)
+      .populate('category')
+      .populate('user')
+    res.status(200).send(post)
   } catch (error) {
     res.status(400).send({ msg: 'Error getting post by ID!', error: error })
   }

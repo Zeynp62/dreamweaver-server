@@ -1,20 +1,20 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-require('dotenv').config();
+require('dotenv').config()
 
 //in .env
-const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS);
+const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
 const APP_SECRET = process.env.APP_SECRET
 
 // Hash password
 const hashPassword = async (password) => {
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-  return hashedPassword; //turn the password to a hashed password
+  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+  return hashedPassword //turn the password to a hashed password
 }
 
 // Compare password
 const comparePassword = async (password, storedPassword) => {
-  const passwordMatch = await bcrypt.compare(password, storedPassword);
+  const passwordMatch = await bcrypt.compare(password, storedPassword)
   return passwordMatch;
 } 
 
@@ -25,40 +25,43 @@ const createToken = (payload) =>{
 }//return the token
 
 //this strip the token from the Bearer
-const stripToken = (req,res,next) =>{
+const stripToken = (req, res, next) => {
   try {
-    //get the token from the request header
-    const token = req.headers['authorization'].split(' ')[1]
+    // Extract token from the Authorization header (Bearer theToken)
+    const token = req.headers['authorization']?.split(' ')[1]; // Safe check with optional chaining
 
-    if(token) {
-      res.locals.token = token
-      return next
+    if (token) {
+      res.locals.token = token;
+      return next()
     }
-    res.status(401).send({status:'Error',msg:"Unauthorized"})
+
+    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } catch (error) {
-    console.log(error)
-    res.status(401).send({status: 'Error', msg: 'Strip Token Error!'})
+    console.log(error);
+    return res.status(401).send({ status: 'Error', msg: 'Strip Token Error!' })
   }
-}
+};
+
 
 // verify the user token
-const verifyToken = (req,res,next) =>{
-  const {token} = res.locals//get the token stored
+const verifyToken = (req, res, next) => {
+  const { token } = res.locals
   
   try {
-    let payload = jwt.verify(token,APP_SECRET)
+    const payload = jwt.verify(token, APP_SECRET)
     
-    if(payload){
+    if (payload) {
       res.locals.payload = payload
       return next()
     }
-    res.status(401).send({status: "Error", msg: "Unauthorized"})
-  } catch (error) {
-    console.log(error)
-    res.status(401).send({status: 'Error', msg: 'Verify Token Error!'})
-  }
 
-}
+    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' });
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send({ status: 'Error', msg: 'Verify Token Error!' });
+  }
+};
+
 
 module.exports = {
   hashPassword,

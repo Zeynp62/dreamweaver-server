@@ -2,7 +2,6 @@ const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
 
-
 //Routs
 const UserRouter = require('./routes/UserRouter')
 const CategoryRouter = require('./routes/CategoryRouter')
@@ -12,13 +11,11 @@ const PostRouter = require('./routes/PostRouter')
 //auth
 const AuthRouter = require('./routes/AuthRouter')
 
-
 const PORT = process.env.PORT || 3001
 
 const db = require('./db')
 
 const app = express()
-
 
 app.use(cors())
 app.use(logger('dev'))
@@ -29,11 +26,11 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/auth', AuthRouter)
 
 app.use('/user', UserRouter)
-app.use('/category',CategoryRouter)
-app.use('/posts',PostRouter)
-app.use('/task',TaskRouter)
+app.use('/category', CategoryRouter)
+app.use('/posts', PostRouter)
+app.use('/task', TaskRouter)
 
-app.use('/', (req,res)=>{
+app.use('/', (req, res) => {
   res.send('App is connected')
 })
 app.use('/uploads', express.static('./uploads'))

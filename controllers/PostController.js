@@ -47,6 +47,7 @@ const deletePostByID = async (req, res) => {
     res.status(400).send({ msg: 'Error deleting a post', error })
   }
 }
+
 const getPostByID = async (req, res) => { //will get all the post information
   try {
   const post = await Post.findById(req.params.id).populate('category').populate('user')
@@ -55,7 +56,6 @@ const getPostByID = async (req, res) => { //will get all the post information
     res.status(400).send({ msg: 'Error getting post by ID!', error: error })
   }
 }
-
 module.exports = {
   getAllPosts,
   createPost,

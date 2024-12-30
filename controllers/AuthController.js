@@ -15,13 +15,13 @@ const register = async (req, res) => {
     }
 
     // Hash password
-    const hashedPassword = await middleware.hashPassword(password)
+    const passwordDigest = await middleware.hashPassword(password)
 
     // Create new user with profileImg (optional)
     const user = new User({
       username,
       email,
-      passwordDigest: hashedPassword,
+      passwordDigest,
       profileImg: profileImg || '',  // Default to empty string if no image is provided
     })
 
@@ -36,26 +36,39 @@ const register = async (req, res) => {
 
 // Login Controller
 const login = async (req, res) => {
-  const { email, username, password } = req.body
+  const { username, password } = req.body
 
   try {
-    //is the user valid => using email ///////////////////////////change/ or add to username if needed
-    const user = await User.findOne({ email })
+
+    const user = await User.findOne({ username })
     
     if (!user) {
       return res.status(400).send({ msg: 'User not found' })
     }
 
-    // is the password valid
-    const isPasswordValid = await middleware.comparePassword(password, user.passwordDigest)
-    if (!isPasswordValid) {
-      return res.status(400).send({ msg: 'Invalid password' })
-    }
+    // check the password using comparePassword in middleware
+    let matched = await middleware.comparePassword(
+      password,
+      user.passwordDigest
+    )
 
-    // 
-    res.status(200).send({ msg: 'Login successful', user })
+     // If they match, constructs a payload object of values we want on the front end
+      if (matched) {
+        let payload = {
+          id: user._id,
+          username: user.username
+      }
+
+      let token = middleware.createToken(payload)
+      return res.send({ user: payload, token })
+    }
+    // if password not valid "considered the else to the if"
+    res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
+
+
   } catch (err) {
-    res.status(500).send({ msg: 'Error during login', error: err.message });
+    res.status(401).send({ status: 'Error', msg: 'An error has occurred while login!' })
+
   }
 };
 

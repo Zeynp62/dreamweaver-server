@@ -1,6 +1,8 @@
 const router = require('express').Router()
-const UserController = require("../controllers/UserController")
+const UserController = require('../controllers/UserController')
 const multer = require('multer')
+const middleware = require('../middleware')
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,7 +18,23 @@ const storage = multer.diskStorage({
 router.get('/', UserController.getAllUsers)
 router.post('/', UserController.createUser)
 router.get('/find', UserController.getUserByQuery)
-router.get("/:id", UserController.getUserByID)
-router.put('/:id', UserController.updateUserByID)
-router.delete('/:id', UserController.deleteUserById); 
+
+router.get(
+  '/:id',
+  middleware.stripToken,
+  middleware.verifyToken,
+  UserController.getUserByID
+)
+router.put(
+  '/:id',
+  middleware.stripToken,
+  middleware.verifyToken,
+  UserController.updateUserByID
+)
+router.delete(
+  '/:id',
+  middleware.stripToken,
+  middleware.verifyToken,
+  UserController.deleteUserById
+)
 module.exports = router

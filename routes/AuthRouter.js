@@ -1,13 +1,25 @@
 // routes/authRoutes.js
-const express = require('express');
-const { register, login } = require('../controllers/AuthController');
-
-const router = express.Router();
+const router = require('express').Router()
+const controller = require('../controllers/AuthController')
+const middleware = require('../middleware')
 
 // POST request to register a new user
-router.post('/register', register);
+router.post('/register', controller.register)
 
 // POST request to login a user
-router.post('/login', login);
+router.post('/login', controller.login)
 
-module.exports = router;
+router.put(
+  '/update/:user_id',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.UpdatePassword
+)
+router.get(
+  '/session',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.CheckSession
+)
+
+module.exports = router

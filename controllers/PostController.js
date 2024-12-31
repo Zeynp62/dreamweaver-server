@@ -15,11 +15,13 @@ const getAllPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    // const user = await User.findById(req.body.user)
-    const user = res.locals.payload.id
+    const user = await User.findById(req.body.user)
+    const category = await Category.findById(req.body.category)
     const post = await Post.create(req.body)
     user.posts.push(post._id)
+    category.posts.push(post._id)
     user.save()
+    category.save()
     res.status(201).send(post)
   } catch (error) {
     res.status(400).send({ msg: 'Error creating a Post', error: error })

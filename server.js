@@ -20,7 +20,7 @@ const app = express()
 app.use(cors())
 app.use(logger('dev'))
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 
 //app.use for the Routes
 app.use('/auth', AuthRouter)
@@ -30,10 +30,11 @@ app.use('/category', CategoryRouter)
 app.use('/posts', PostRouter)
 app.use('/task', TaskRouter)
 
+app.use('/uploads', express.static('./uploads'))
+
 app.use('/', (req, res) => {
   res.send('App is connected')
 })
-app.use('/uploads', express.static('./uploads'))
 
 app.listen(PORT, () => {
   console.log(`Running the Express server on Port ${PORT}...`)

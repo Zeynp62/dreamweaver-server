@@ -90,6 +90,41 @@ const deleteUserById = async (req, res) => {
   }
 };
 
+
+const updateUserProfile = async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    let profileImg = req.file ? req.file.path : undefined;
+
+    // Normalize the path to use forward slashes (important for Windows)
+    if (profileImg) {
+      profileImg = profileImg.replace(/\\/g, '/');
+    }
+
+    // Prepare the update data
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (profileImg) updateData.profileImg = profileImg;
+
+    // Update user document
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.user_id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send({ msg: 'User not found' });
+    }
+
+    res.status(200).send({ user: updatedUser });
+  } catch (error) {
+    res.status(500).send({ msg: 'Error updating user profile', error: error.message });
+  }
+};
+
+
 // module exports
 module.exports = {
   createUser,
@@ -97,5 +132,6 @@ module.exports = {
   getUserByID,
   getUserByQuery,
   updateUserByID,
-  deleteUserById
+  deleteUserById,
+  updateUserProfile
 }

@@ -15,7 +15,8 @@ const getAllPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const user = await User.findById(req.body.user)
+    // const user = await User.findById(req.body.user)
+    const user = res.locals.payload.id
     const post = await Post.create(req.body)
     user.posts.push(post._id)
     user.save()

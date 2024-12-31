@@ -3,6 +3,7 @@ const User = require('./../models/user')
 const Task = require('./../models/tasks')
 const Post = require('./../models/post')
 
+const bcrypt = require('bcrypt')
 //create a new user
 const createUser = async (req, res) => {
   try {
@@ -52,7 +53,7 @@ const getUserByQuery = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     //getting the users as objects
-    const users = await User.find({});
+    const users = await User.find({})
 res.status(200).send(users);
   } catch (error) {
     res.status(400).send({ msg: 'Error getting all users!', error })
@@ -74,55 +75,81 @@ const updateUserByID = async (req, res) => {
 // delete
 const deleteUserById = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndDelete(req.params.id)
 
     if (!user) {
-      return res.status(404).send({ msg: 'User not found!' });
+      return res.status(404).send({ msg: 'User not found!' })
     }
 
     // Delete related tasks and posts
-    await Task.deleteMany({ user: user._id });
-    await Post.deleteMany({ user: user._id });
+    await Task.deleteMany({ user: user._id })
+    await Post.deleteMany({ user: user._id })
 
-    res.status(200).send({ msg: 'User successfully deleted!', user });
+    res.status(200).send({ msg: 'User successfully deleted!', user })
   } catch (error) {
-    res.status(400).send({ msg: 'Error Deleting user', error });
+    res.status(400).send({ msg: 'Error Deleting user', error })
   }
-};
+}
 
 
-const updateUserProfile = async (req, res) => {
+
+const updateEmail = async (req, res) => {
+  const { email } = req.body
   try {
-    const { username, email } = req.body;
-    let profileImg = req.file ? req.file.path : undefined;
-
-    // Normalize the path to use forward slashes (important for Windows)
-    if (profileImg) {
-      profileImg = profileImg.replace(/\\/g, '/');
-    }
-
-    // Prepare the update data
-    const updateData = {};
-    if (username) updateData.username = username;
-    if (email) updateData.email = email;
-    if (profileImg) updateData.profileImg = profileImg;
-
-    // Update user document
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.user_id,
-      updateData,
+      req.params.id,
+      { email },
       { new: true }
-    );
-
+    )
     if (!updatedUser) {
-      return res.status(404).send({ msg: 'User not found' });
+      return res.status(404).send({ msg: 'User not found' })
+    }
+    res.status(200).send({ user: updatedUser })
+  } catch (error) {
+    res.status(500).send({ msg: 'Error updating email', error: error.message })
+  }
+}
+
+const updatePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) {
+      return res.status(404).send({ msg: 'User not found' })
     }
 
-    res.status(200).send({ user: updatedUser });
+    const isMatch = await bcrypt.compare(oldPassword, user.passwordDigest)
+    if (!isMatch) return res.status(400).send({ msg: 'Old password is incorrect.' })
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12)
+    user.passwordDigest = hashedPassword
+    await user.save()
+
+    res.status(200).send({ user })
   } catch (error) {
-    res.status(500).send({ msg: 'Error updating user profile', error: error.message });
+    res.status(500).send({ msg: 'Error updating password', error: error.message })
   }
-};
+}
+
+
+const updateProfileImg = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send({ msg: 'No file uploaded' })
+    }
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { profileImg: req.file.path }, // Storing file path
+      { new: true }
+    )
+    if (!user) {
+      return res.status(404).send({ msg: 'User not found' })
+    }
+    res.status(200).send({ user })
+  } catch (error) {
+    res.status(500).send({ msg: 'Error updating profile image', error: error.message })
+  }
+}
 
 
 // module exports
@@ -133,5 +160,7 @@ module.exports = {
   getUserByQuery,
   updateUserByID,
   deleteUserById,
-  updateUserProfile
+  updateEmail,
+  updatePassword,
+  updateProfileImg
 }

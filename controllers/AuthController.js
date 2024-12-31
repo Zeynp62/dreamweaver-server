@@ -25,7 +25,7 @@ const register = async (req, res) => {
       username,
       email,
       passwordDigest,
-      profileImg: profileImg || '',  // Default to empty string if no image is provided
+      profileImg: profileImg || 'uploads/profileImg-1735633735016-5378919.png',  // Default to empty string if no image is provided
     })
 
     await user.save()

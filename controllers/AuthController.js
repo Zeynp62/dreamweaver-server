@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const middleware = require('./../middleware')
-
+const Task = require('./../models/tasks')
+const Post = require('./../models/post')
 
 // Registration Controller
 const register = async (req, res) => {
@@ -24,7 +25,7 @@ const register = async (req, res) => {
       username,
       email,
       passwordDigest,
-      profileImg: profileImg || '',  // Default to empty string if no image is provided
+      profileImg: profileImg || 'uploads/profileImg-1735633735016-5378919.png',  // Default to empty string if no image is provided
     })
 
     await user.save()
@@ -41,7 +42,7 @@ const login = async (req, res) => {
   const { username, password } = req.body
 
   try {
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ username }).populate('posts').populate('tasks')
 
     if (!user) {
       return res.status(400).send({ msg: 'User not found' })
@@ -56,6 +57,8 @@ const login = async (req, res) => {
         username: user.username,
         email: user.email,
         profileImg: user.profileImg,
+        tasks: user.tasks,
+        posts: user.posts
       }
 
       let token = middleware.createToken(payload)

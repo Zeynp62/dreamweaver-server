@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema(
   {
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true
-    },
     title: { type: String, required: true },
     description: {
       type: String,
+      required: true
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
       required: true
     },
     postImg: { type: String },

@@ -28,7 +28,7 @@ app.use('/auth', AuthRouter)
 app.use('/user', UserRouter)
 app.use('/category', CategoryRouter)
 app.use('/posts', PostRouter)
-app.use('/task', TaskRouter)
+app.use('/tasks', TaskRouter)
 
 app.use('/uploads', express.static('./uploads'))
 

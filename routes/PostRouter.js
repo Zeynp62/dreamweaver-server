@@ -1,7 +1,10 @@
+const express = require('express')
 const router = require('express').Router()
 const PostController = require('../controllers/PostController')
 const multer = require('multer')
 const middleware = require('../middleware')
+const path = require('path')
+const app = express()
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -13,6 +16,8 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${uniqueSuffix}.${extension}`)
   }
 })
+
+app.use('/uploads', express.static('./uploads'))
 
 const upload = multer({ storage: storage })
 router.get('/', PostController.getAllPosts)

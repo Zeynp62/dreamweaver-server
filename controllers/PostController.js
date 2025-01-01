@@ -5,7 +5,7 @@ var path = require('path')
 const getAllPosts = async (req, res) => {
   //getting the post with the category
   try {
-    const posts = await Post.find().populate('category')
+    const posts = await Post.find().populate('category').populate('user')
     // const posts = await Post.find({})
     res.status(200).send(posts)
   } catch (error) {
@@ -26,7 +26,6 @@ const createPost = async (req, res) => {
     }
 
     const post = await Post.create(postData)
-
     user.posts.push(post._id)
     category.posts.push(post._id)
 

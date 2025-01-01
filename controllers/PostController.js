@@ -16,19 +16,29 @@ const getAllPosts = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const user = await User.findById(res.locals.payload.id)
-
     const category = await Category.findById(req.body.category)
-    const post = await Post.create(req.body)
+
+    // const post = await Post.create(req.body)
+    const postData = {
+      ...req.body,
+      user: user._id,
+      postImg: req.file ? req.file.path : null, // Save the uploaded image path if user provide it, or give it null value
+    }
+
+    const post = await Post.create(postData)
 
     user.posts.push(post._id)
     category.posts.push(post._id)
-    user.save()
-    category.save()
+
+    await user.save()
+    await category.save()
+
     res.status(201).send(post)
   } catch (error) {
     res.status(400).send({ msg: 'Error creating a Post', error: error })
   }
 }
+
 
 const updatePostByID = async (req, res) => {
   try {

@@ -28,12 +28,4 @@ router.delete(
   TaskController.deleteTaskByID
 )
 
-router.get(
-  '/user/:userId',
-  middleware.stripToken,
-  middleware.verifyToken,
-  TaskController.getTasksByUserId
-);
-
-
 module.exports = router

@@ -30,7 +30,7 @@ app.use('/category', CategoryRouter)
 app.use('/posts', PostRouter)
 app.use('/tasks', TaskRouter)
 
-// app.use('/uploads', express.static('./uploads'))
+app.use('/uploads', express.static('./uploads'))
 
 app.use('/', (req, res) => {
   res.send('App is connected')

@@ -1,7 +1,7 @@
 const Post = require('../models/post')
 const User = require('../models/user')
 const Category = require('../models/category')
-
+var path = require('path')
 const getAllPosts = async (req, res) => {
   //getting the post with the category
   try {
@@ -15,9 +15,11 @@ const getAllPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const user = await User.findById(req.body.user)
+    const user = await User.findById(res.locals.payload.id)
+
     const category = await Category.findById(req.body.category)
     const post = await Post.create(req.body)
+
     user.posts.push(post._id)
     category.posts.push(post._id)
     user.save()

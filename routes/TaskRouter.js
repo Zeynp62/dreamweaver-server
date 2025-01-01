@@ -4,7 +4,7 @@ const middleware = require('../middleware')
 
 router.get('/', TaskController.getAllTasks)
 router.post(
-  '/',
+  '/task',
   middleware.stripToken,
   middleware.verifyToken,
   TaskController.createTask
@@ -22,7 +22,7 @@ router.put(
   TaskController.updateTaskByID
 )
 router.delete(
-  '/:id',
+  '/task/:id',
   middleware.stripToken,
   middleware.verifyToken,
   TaskController.deleteTaskByID

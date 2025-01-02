@@ -21,7 +21,7 @@ const createPost = async (req, res) => {
     const postData = {
       ...req.body,
       user: user._id,
-      postImg: req.file ? req.file.path : null, // Save the uploaded image path if user provide it, or give it null value
+      postImg: req.file ? req.file.path : null // Save the uploaded image path if user provide it, or give it null value
     }
 
     const post = await Post.create(postData)
@@ -38,12 +38,16 @@ const createPost = async (req, res) => {
   }
 }
 
-
 const updatePostByID = async (req, res) => {
   try {
-    const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
+    const postData = {
+      ...req.body,
+      postImg: req.file ? req.file.path : undefined
+    }
+    const post = await Post.findByIdAndUpdate(req.params.id, postData, {
       new: true
     })
+
     res.status(200).send(post)
   } catch (error) {
     res.status(400).send({ msg: 'Error updating post by ID', error })

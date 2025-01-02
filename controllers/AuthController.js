@@ -60,7 +60,7 @@ const login = async (req, res) => {
         tasks: user.tasks,
         posts: user.posts
       }
-
+      // console.log(payload)
       let token = middleware.createToken(payload)
       return res.send({ user: payload, token })
     }

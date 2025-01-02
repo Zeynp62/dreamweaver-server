@@ -17,15 +17,16 @@ const storage = multer.diskStorage({
   }
 })
 
-app.use('/uploads', express.static('./uploads'))
+// app.use('/uploads', express.static('./uploads'))
 
 const upload = multer({ storage: storage })
+
 router.get('/', PostController.getAllPosts)
 router.post(
   '/',
   middleware.stripToken,
   middleware.verifyToken,
-  upload.single('image'),
+  upload.single('image'), // Ensure this matches the frontend key
   PostController.createPost
 )
 router.get(
@@ -38,6 +39,7 @@ router.put(
   '/:id',
   middleware.stripToken,
   middleware.verifyToken,
+  upload.single('postImg'),
   PostController.updatePostByID
 )
 router.delete(

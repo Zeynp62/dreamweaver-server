@@ -15,53 +15,51 @@ const hashPassword = async (password) => {
 // Compare password
 const comparePassword = async (password, storedPassword) => {
   const passwordMatch = await bcrypt.compare(password, storedPassword)
-  return passwordMatch;
-} 
+  return passwordMatch
+}
 
 //creating the token
-const createToken = (payload) =>{
-  let token = jwt.sign(payload,APP_SECRET) //generate the token
+const createToken = (payload) => {
+  let token = jwt.sign(payload, APP_SECRET) //generate the token
   return token
-}//return the token
+} //return the token
 
 //this strip the token from the Bearer
 const stripToken = (req, res, next) => {
   try {
     // Extract token from the Authorization header (Bearer theToken)
-    const token = req.headers['authorization']?.split(' ')[1]; // Safe check with optional chaining
+    const token = req.headers['authorization']?.split(' ')[1] // Safe check with optional chaining
 
     if (token) {
-      res.locals.token = token;
+      res.locals.token = token
       return next()
     }
 
     return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return res.status(401).send({ status: 'Error', msg: 'Strip Token Error!' })
   }
-};
-
+}
 
 // verify the user token
 const verifyToken = (req, res, next) => {
   const { token } = res.locals
-  
+
   try {
     const payload = jwt.verify(token, APP_SECRET)
-    
+
     if (payload) {
       res.locals.payload = payload
       return next()
     }
 
-    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' });
+    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } catch (error) {
-    console.log(error);
-    return res.status(401).send({ status: 'Error', msg: 'Verify Token Error!' });
+    console.log(error)
+    return res.status(401).send({ status: 'Error', msg: 'Verify Token Error!' })
   }
-};
-
+}
 
 module.exports = {
   hashPassword,

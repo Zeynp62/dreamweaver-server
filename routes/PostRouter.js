@@ -38,6 +38,7 @@ router.put(
   '/:id',
   middleware.stripToken,
   middleware.verifyToken,
+  upload.single('image'),
   PostController.updatePostByID
 )
 router.delete(

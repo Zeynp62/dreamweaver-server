@@ -26,7 +26,7 @@ router.post(
   '/',
   middleware.stripToken,
   middleware.verifyToken,
-  upload.fields([{ name: 'image', maxCount: 1 }]), // Ensure this matches the frontend key
+  upload.single('image'), // Ensure this matches the frontend key
   PostController.createPost
 )
 router.get(
